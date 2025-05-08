@@ -1,15 +1,17 @@
-# IoT Sensor Dashboard
+# IoT Sensor Dashboard 🌡️
 
 A real-time IoT dashboard that visualizes environmental sensor data using modern web technologies. This project demonstrates full-stack development skills by combining IoT devices, cloud services, and a responsive web interface.
 
+![Dashboard Preview](docs/dashboard-preview.png)
+
 ## Features
 
-- Real-time environmental data visualization (temperature, humidity, gas levels)
-- Support for both physical IoT devices (ESP32) and simulated sensors
-- MQTT and HTTP protocols for data transmission
-- Secure data storage using Firebase
-- Interactive React dashboard with real-time updates
-- Responsive design for desktop and mobile viewing
+- **Real-time Visualization**: Interactive charts for temperature, humidity, and gas levels
+- **Sensor Management**: Enable/disable specific sensors from the dashboard
+- **Mock Data Generation**: Built-in simulation for testing without physical sensors
+- **MQTT Communication**: Real-time data transmission between sensors and backend
+- **Responsive Design**: Works on desktop and mobile devices
+- **Modular Architecture**: Separation of concerns between data collection, processing, and visualization
 
 ## System Architecture
 
@@ -17,7 +19,7 @@ A real-time IoT dashboard that visualizes environmental sensor data using modern
 ┌─────────────┐     ┌──────────────┐     ┌───────────────┐     ┌─────────────┐
 │  IoT Device │     │ MQTT Broker/ │     │   Node.js     │     │  Firebase   │
 │  (ESP32 or  │ ──► │  HTTP API    │ ──► │   Backend     │ ──► │  Database   │
-│   Python)   │     │ (Mosquitto)  │     │   (Express)   │     │             │
+│   Python)   │     │ (Mosquitto)  │     │   (Express)   │     │ (Optional)  │
 └─────────────┘     └──────────────┘     └───────────────┘     └─────────────┘
                                                                       │
                                                                       │
@@ -28,6 +30,17 @@ A real-time IoT dashboard that visualizes environmental sensor data using modern
                                                               └─────────────┘
 ```
 
+## Current Implementation Status
+
+| Component | Status | Description |
+|-----------|--------|-------------|
+| React Frontend | ✅ | Complete with charts, sensor toggles, and real-time updates |
+| Node.js Backend | ✅ | Express server with MQTT connectivity |
+| Python Sensor Simulation | ✅ | Virtual sensors generating realistic environmental data |
+| MQTT Broker | ✅ | Data transport layer using Mosquitto |
+| Firebase Integration | 🔄 | Basic structure defined, ready for implementation |
+| Authentication | ⏳ | Planned for future development |
+
 ## Getting Started
 
 ### Prerequisites
@@ -35,7 +48,7 @@ A real-time IoT dashboard that visualizes environmental sensor data using modern
 - Node.js (v14 or higher)
 - Python 3.8+ (for sensor simulation)
 - MQTT Broker (e.g., Mosquitto)
-- Firebase account
+- (Optional) Firebase account
 - (Optional) ESP32 device for physical sensors
 
 ### Installation
@@ -58,35 +71,56 @@ A real-time IoT dashboard that visualizes environmental sensor data using modern
    npm install
    ```
 
-4. Set up environment variables:
+4. Set up Python virtual environment for sensor simulation:
+   ```bash
+   cd ../sensor-simulation
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+5. Set up environment variables:
    ```bash
    # Backend (.env)
    MQTT_BROKER_URL=mqtt://localhost:1883
-   FIREBASE_CONFIG_PATH=./firebase-config.json
    PORT=3000
 
    # Frontend (.env)
+   PORT=3001
    REACT_APP_API_URL=http://localhost:3000
-   REACT_APP_FIREBASE_CONFIG={your-firebase-config}
    ```
 
-5. Start the services:
-   ```bash
-   # Terminal 1: Start MQTT Broker
-   mosquitto -c /path/to/mosquitto.conf
+### Running the Application
 
-   # Terminal 2: Start Backend
-   cd backend
-   npm run dev
+You'll need four terminal windows to run the complete system:
 
-   # Terminal 3: Start Frontend
-   cd frontend
-   npm start
+**Terminal 1 - MQTT Broker**:
+```bash
+mosquitto
+```
 
-   # Terminal 4 (Optional): Start Sensor Simulation
-   cd sensor-simulation
-   python simulate_sensors.py
-   ```
+**Terminal 2 - Backend**:
+```bash
+cd backend
+npm run dev
+```
+
+**Terminal 3 - Frontend**:
+```bash
+cd frontend
+npm start
+```
+
+**Terminal 4 - Sensor Simulation**:
+```bash
+cd sensor-simulation
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+python simulate_sensors.py
+```
+
+The application will be available at:
+- Frontend: http://localhost:3001
+- Backend API: http://localhost:3000
 
 ## Project Structure
 
@@ -94,90 +128,65 @@ A real-time IoT dashboard that visualizes environmental sensor data using modern
 IoT-Sensor-Dashboard/
 ├── backend/                 # Node.js Express backend
 │   ├── src/
-│   │   ├── controllers/    # Request handlers
-│   │   ├── models/        # Data models
-│   │   ├── routes/        # API routes
-│   │   ├── services/      # Business logic
-│   │   └── utils/         # Helper functions
-│   └── tests/             # Backend tests
+│   │   ├── index.js        # Main Express server
+│   │   └── ...
 ├── frontend/               # React dashboard
 │   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── pages/        # Page components
-│   │   ├── services/     # API services
-│   │   ├── hooks/        # Custom React hooks
-│   │   └── utils/        # Helper functions
-│   └── tests/            # Frontend tests
+│   │   ├── components/     # React components 
+│   │   │   ├── Dashboard.js       # Main dashboard
+│   │   │   └── SensorList.js      # Sensor management
+│   │   ├── App.js         # Main app component
+│   │   └── ...
 ├── sensor-simulation/      # Python sensor simulation
-│   ├── sensors/          # Sensor implementations
-│   └── config/           # Simulation settings
-└── hardware/              # ESP32 Arduino code
-    └── sensor_node/      # IoT device firmware
+│   ├── sensors/            # Sensor implementations
+│   │   ├── base_sensor.py         # Base sensor class
+│   │   └── environmental_sensor.py # Temperature/humidity sensor
+│   ├── simulate_sensors.py # Main simulation script
+│   └── ...
+├── scripts/                # Utility scripts
+└── README.md
 ```
 
-## Firebase Schema
+## Dashboard Features
 
-```javascript
-{
-  "sensors": {
-    "sensor_id": {
-      "name": "Living Room Sensor",
-      "location": "Living Room",
-      "type": "ESP32",
-      "lastUpdate": timestamp,
-      "status": "active"
-    }
-  },
-  "readings": {
-    "sensor_id": {
-      "timestamp": {
-        "temperature": 23.5,
-        "humidity": 45.2,
-        "gasLevel": 432,
-        "timestamp": timestamp
-      }
-    }
-  }
-}
-```
+The dashboard provides:
 
-## Development
+- **Real-time Charts**: Visualizes temperature, humidity, and gas levels over time
+- **Sensor Cards**: Shows the latest readings from each active sensor
+- **Sensor Control**: Toggle each sensor on/off to control what data is displayed
+- **Responsive Layout**: Adapts to different screen sizes
+- **Auto-Updating**: All data updates every 5 seconds automatically
 
-### Running Tests
-```bash
-# Backend tests
-cd backend
-npm test
+## Implementation Details
 
-# Frontend tests
-cd frontend
-npm test
-```
+### Frontend (React)
+- Built with React and Material UI
+- Uses Chart.js for responsive, interactive charts
+- Real-time data updates using polling and state management
+- Responsive design for all screen sizes
 
-### Code Style
-This project uses ESLint and Prettier for code formatting. Run linting with:
-```bash
-npm run lint
-```
+### Backend (Node.js)
+- Express server for RESTful API endpoints
+- MQTT client for subscribing to sensor topics
+- JSON parsing and validation
+- Structured logging with Winston
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### Sensor Simulation (Python)
+- Object-oriented design with sensor classes
+- MQTT publishing for real-time data transmission
+- Realistic data generation with random variations
+- Multi-threaded to simulate multiple sensors simultaneously
 
 ## Future Enhancements
 
-- [ ] User authentication via Firebase Auth
-- [ ] Email/SMS alerts for sensor thresholds
-- [ ] Data visualization with historical trends
-- [ ] Mobile app version
-- [ ] Sensor battery level monitoring
-- [ ] Custom dashboard layouts
-- [ ] Data export functionality
-- [ ] Multiple sensor groups/locations
+- [ ] Add user authentication via Firebase Auth
+- [ ] Implement historical data storage and retrieval
+- [ ] Add alert thresholds for sensor values
+- [ ] Create mobile app version
+- [ ] Add sensor battery level monitoring
+- [ ] Support custom dashboard layouts
+- [ ] Implement data export functionality
+- [ ] Add geolocation for multiple sensor sites
 
 ## License
 
@@ -190,3 +199,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [React](https://reactjs.org/) for the frontend framework
 - [Express](https://expressjs.com/) for the backend framework
 - [Chart.js](https://www.chartjs.org/) for data visualization
+- [Material UI](https://mui.com/) for UI components

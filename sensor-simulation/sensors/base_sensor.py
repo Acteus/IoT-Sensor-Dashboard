@@ -1,5 +1,6 @@
 import time
 import uuid
+import json
 from datetime import datetime
 import random
 import paho.mqtt.client as mqtt
@@ -59,7 +60,9 @@ class BaseSensor:
         })
         
         topic = f"sensors/{self.sensor_id}/data"
-        self.client.publish(topic, str(reading), qos=1)
+        # Convert to proper JSON string
+        json_data = json.dumps(reading)
+        self.client.publish(topic, json_data, qos=1)
         
     def run(self):
         """

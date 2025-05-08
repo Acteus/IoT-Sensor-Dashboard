@@ -1,9 +1,0 @@
-You can replace this with an actual screenshot of your running dashboard. 
-
-To capture a screenshot of your dashboard:
-1. Start the application
-2. Open http://localhost:3001 in your browser
-3. Take a screenshot (Cmd+Shift+4 on Mac, Win+Shift+S on Windows)
-4. Save the image as "dashboard-preview.png" in this directory
-
-This will make your README look more professional and give users a preview of what to expect. 

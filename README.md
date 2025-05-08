@@ -200,3 +200,141 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Express](https://expressjs.com/) for the backend framework
 - [Chart.js](https://www.chartjs.org/) for data visualization
 - [Material UI](https://mui.com/) for UI components
+
+## Architecture
+
+The project follows a three-tier architecture:
+
+1. **Data Collection**: Sensors collect and publish environmental data (temperature, humidity, gas levels) via MQTT
+2. **Backend**: Node.js Express server subscribes to MQTT topics, processes data, and exposes REST APIs
+3. **Frontend**: React-based dashboard with real-time charts and sensor management
+
+## Technologies
+
+- **Backend**: Node.js, Express, MQTT.js, MongoDB, Mongoose
+- **Frontend**: React, Material UI, Chart.js
+- **Data**: MQTT, MongoDB
+- **Security**: JWT Authentication, bcrypt, helmet
+
+## Prerequisites
+
+- Node.js (v14+)
+- MongoDB (v4+)
+- MQTT Broker (such as Mosquitto)
+- Python 3.6+ (for sensor simulation)
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/IoT-Sensor-Dashboard.git
+cd IoT-Sensor-Dashboard
+```
+
+### 2. Set up MongoDB
+
+Make sure MongoDB is installed and running on your system or use a cloud MongoDB service. Update the connection string in the `.env` file.
+
+### 3. Setup environment variables
+
+Create a `.env` file in the backend directory with the following variables:
+
+```
+PORT=3000
+NODE_ENV=development
+MQTT_BROKER_URL=mqtt://localhost:1883
+MONGODB_URI=mongodb://localhost:27017/iot_dashboard
+JWT_SECRET=your_secret_key_here
+JWT_EXPIRE=7d
+ALLOWED_ORIGINS=http://localhost:3001
+```
+
+### 4. Install backend dependencies
+
+```bash
+cd backend
+npm install
+```
+
+### 5. Install frontend dependencies
+
+```bash
+cd frontend
+npm install
+```
+
+### 6. Install sensor simulation dependencies
+
+```bash
+cd sensor-simulation
+pip install -r requirements.txt
+```
+
+## Usage
+
+### 1. Start the backend server
+
+```bash
+cd backend
+npm start
+```
+
+### 2. Start the frontend development server
+
+```bash
+cd frontend
+npm start
+```
+
+### 3. Run the sensor simulations
+
+```bash
+cd sensor-simulation
+python run_sensors.py
+```
+
+## Authentication
+
+The system uses JWT authentication. To get started:
+
+1. Create a user account through the `/api/auth/register` endpoint:
+```json
+{
+  "username": "admin",
+  "email": "admin@example.com",
+  "password": "securepassword"
+}
+```
+
+2. Login to get a JWT token:
+```json
+{
+  "email": "admin@example.com",
+  "password": "securepassword"
+}
+```
+
+3. Include the token in all authenticated requests:
+```
+Authorization: Bearer <your_token>
+```
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login and get token
+- `GET /api/auth/me` - Get current user (protected)
+
+### Sensors
+- `GET /api/sensors` - Get all sensors (protected)
+- `GET /api/sensors/:id` - Get a specific sensor (protected)
+- `POST /api/sensors` - Create/update a sensor (protected)
+- `DELETE /api/sensors/:id` - Delete a sensor (admin only)
+
+### Readings
+- `GET /api/readings` - Get all readings (protected)
+- `GET /api/readings/:sensorId` - Get readings for a specific sensor (protected)
+- `POST /api/readings` - Create a reading (protected)
+- `DELETE /api/readings/:sensorId` - Delete readings for a sensor (admin only)

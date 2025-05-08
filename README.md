@@ -1,4 +1,4 @@
-# IoT Sensor Dashboard 🌡️
+# IoT Sensor Dashboard
 
 A real-time IoT dashboard that visualizes environmental sensor data using modern web technologies. This project demonstrates full-stack development skills by combining IoT devices, cloud services, and a responsive web interface.
 
@@ -11,7 +11,7 @@ A real-time IoT dashboard that visualizes environmental sensor data using modern
 - Interactive React dashboard with real-time updates
 - Responsive design for desktop and mobile viewing
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌───────────────┐     ┌─────────────┐
@@ -88,7 +88,7 @@ A real-time IoT dashboard that visualizes environmental sensor data using modern
    python simulate_sensors.py
    ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 IoT-Sensor-Dashboard/
@@ -141,7 +141,7 @@ IoT-Sensor-Dashboard/
 }
 ```
 
-## 🛠️ Development
+## Development
 
 ### Running Tests
 ```bash
@@ -168,7 +168,7 @@ npm run lint
 4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 Future Enhancements
+## Future Enhancements
 
 - [ ] User authentication via Firebase Auth
 - [ ] Email/SMS alerts for sensor thresholds
@@ -179,11 +179,11 @@ npm run lint
 - [ ] Data export functionality
 - [ ] Multiple sensor groups/locations
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Firebase](https://firebase.google.com/) for real-time database
 - [MQTT.js](https://github.com/mqttjs/MQTT.js) for MQTT implementation

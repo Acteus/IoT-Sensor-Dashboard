@@ -8,6 +8,7 @@ const { DateTime } = require('luxon');
 const mongoose = require('mongoose');
 const connectDB = require('./config/database');
 const logger = require('./utils/logger');
+const { validateSensorData } = require('./utils/validator');
 
 // Import route files
 const authRoutes = require('./routes/authRoutes');
@@ -121,7 +122,15 @@ function connectMQTT() {
 // Process incoming sensor data
 async function processSensorData(topic, data) {
   try {
-    const sensorId = data.sensor_id;
+    // Validate and normalize the sensor data
+    const validatedData = validateSensorData(data);
+    
+    if (!validatedData) {
+      logger.error('Invalid sensor data received, skipping processing');
+      return;
+    }
+    
+    const sensorId = validatedData.sensor_id;
     
     // Check if we already know about this sensor
     const sensor = await Sensor.findOne({ id: sensorId });
@@ -130,9 +139,9 @@ async function processSensorData(topic, data) {
       // Add new sensor
       await Sensor.create({
         id: sensorId,
-        name: data.name || `Sensor ${sensorId}`,
-        location: data.location || 'Unknown',
-        type: data.type || 'Virtual',
+        name: validatedData.name,
+        location: validatedData.location,
+        type: validatedData.type,
         lastUpdate: new Date(),
         status: 'active'
       });
@@ -143,14 +152,24 @@ async function processSensorData(topic, data) {
       await sensor.save();
     }
     
-    // Create the reading
-    await Reading.create({
+    // Create the reading - prepare the data object
+    const readingData = {
       sensorId,
-      timestamp: data.timestamp ? new Date(data.timestamp) : new Date(),
-      temperature: data.temperature,
-      humidity: data.humidity,
-      gasLevel: data.gasLevel
+      timestamp: validatedData.timestamp ? new Date(validatedData.timestamp) : new Date()
+    };
+    
+    // Add all the sensor measurement fields
+    Object.keys(validatedData).forEach(key => {
+      // Skip metadata fields that go in the sensor model
+      if (!['sensor_id', 'name', 'location', 'type', 'timestamp'].includes(key)) {
+        readingData[key] = validatedData[key];
+      }
     });
+    
+    // Create the reading with all fields
+    await Reading.create(readingData);
+    
+    logger.debug(`Processed reading for sensor ${sensorId} with ${Object.keys(readingData).length - 2} measurements`);
     
   } catch (error) {
     logger.error('Error processing sensor data:', error);

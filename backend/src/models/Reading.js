@@ -12,6 +12,7 @@ const ReadingSchema = new mongoose.Schema({
     default: Date.now,
     index: true
   },
+  // Standard sensor fields (optional)
   temperature: {
     type: Number,
     required: false
@@ -23,8 +24,12 @@ const ReadingSchema = new mongoose.Schema({
   gasLevel: {
     type: Number,
     required: false
-  },
-  // Add other sensor reading fields as needed
+  }
+}, { 
+  // This allows for dynamic fields not defined in the schema
+  strict: false,
+  // Store all additional fields
+  timestamps: true
 });
 
 // Index for efficient querying by sensor and time

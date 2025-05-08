@@ -1,4 +1,4 @@
-# IoT Sensor Dashboard 🌡️
+# IoT Sensor Dashboard
 
 A real-time IoT dashboard that visualizes environmental sensor data using modern web technologies. This project demonstrates full-stack development skills by combining IoT devices, cloud services, and a responsive web interface.
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import { ThemeProvider, CssBaseline, AppBar, Toolbar, Typography } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
+import Dashboard from './components/Dashboard';
 
 // Create a theme instance
 const theme = createTheme({
@@ -21,12 +22,16 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="App">
-        <header className="App-header">
-          <h1>IoT Sensor Dashboard</h1>
-        </header>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              IoT Sensor Dashboard
+            </Typography>
+          </Toolbar>
+        </AppBar>
         <main>
           <Routes>
-            <Route path="/" element={<div>Dashboard coming soon!</div>} />
+            <Route path="/" element={<Dashboard />} />
           </Routes>
         </main>
       </div>
